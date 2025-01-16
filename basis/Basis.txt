@@ -1,0 +1,51 @@
+Basis prototype ideas
+
+** tokens
+text
+number
+identifier
+reswords
+arrays/slices
+
+** reserved words
+.class -- typeclasses a la Haskell
+.object -- object type (can include objects)
+.record -- buffer type
+.intrinsic -- built-in functions
+.union -- untagged union (records only)
+.enum -- enumerations
+.variant -- tagged union (objects or records or enumerations)
+
+** Basic datatypes
+uX
+iX
+bX
+fX
+
+** Compound types
+
+** Function types
+'parm -- return parm, var
+parm -- input only parm, val
+
+arg -- read only arg (var or val)
+*arg -- copy arg (var)
+&arg -- reference arg (val)
+
+explicit intrinsics
+
+
+** Execution patterns
+fexprs -- everything at runtime
+comptime -- everything at compile time
+defer & linear types
+arguments as syntactic sugar 
+icon-style success/fail semantics
+
+** Allocation etc.
+context objects, args
+
+** Modules
+---------
+extend objects/classes bottom up, "depth-first", adding all non-shadowed elements
+.repeat 

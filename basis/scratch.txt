@@ -1,0 +1,9 @@
+blah...:
+	cmd: x, y, z 
+|- failmode m |
+    cmd2: a, b 
+|- failmode2 n |
+	cmd3: c, z 
+
+
+.cmd procedure(typeVars): (arglist) = (calls) ;;
