@@ -113,12 +113,12 @@ std::shared_ptr<Parser> basis::match(token_t tok_type)
     return std::make_shared<p_token>(tok_type);
 }
 
-std::shared_ptr<Parser> basis::match(token_t tok_type, sink<std::shared_ptr<Token>> s)
+std::shared_ptr<Parser> basis::match(token_t tok_type, Sink<std::shared_ptr<Token>> s)
 {
     return std::make_shared<p2_token>(tok_type, s);
 }
 
-std::shared_ptr<Parser> basis::require(std::shared_ptr<Parser> spp, sink<std::shared_ptr<Token>> s)
+std::shared_ptr<Parser> basis::require(std::shared_ptr<Parser> spp, Sink<std::shared_ptr<Token>> s)
 {
     return std::make_shared<p_error>(spp, s);
 }

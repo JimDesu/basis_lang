@@ -63,7 +63,7 @@ namespace basis {
     };
 
     template <typename T>
-    using sink = std::function<void(T)>;
+    using Sink = std::function<void(T)>;
 
     // parse functions ----------------------------------------
     iter_t end_of_range( iter_t start, iter_t finish);
@@ -83,18 +83,18 @@ namespace basis {
 
     class p2_token : public Parser {
         token_t token_type;
-        sink <std::shared_ptr<Token>> token_sink;
+        Sink <std::shared_ptr<Token>> token_sink;
     public:
-        p2_token(token_t tok_type, sink<std::shared_ptr<Token>> s):
+        p2_token(token_t tok_type, Sink<std::shared_ptr<Token>> s):
             token_type{ tok_type }, token_sink{ s } {};
         virtual bool operator()(iter_t& start, iter_t finish);
     };
 
     class p_error : public Parser {
-        sink<std::shared_ptr<Token>> err_sink;
+        Sink<std::shared_ptr<Token>> err_sink;
         std::shared_ptr<Parser> p_parser;
     public:
-        p_error(std::shared_ptr<Parser> spp, sink <std::shared_ptr<Token>> s)
+        p_error(std::shared_ptr<Parser> spp, Sink <std::shared_ptr<Token>> s)
             : p_parser{ spp }, err_sink{ s } {};
         virtual bool operator()(iter_t& start, iter_t finish);
     };
@@ -135,8 +135,8 @@ namespace basis {
     };
 
     std::shared_ptr<Parser> match(token_t tok_type);
-    std::shared_ptr<Parser> match(token_t tok_type, sink<std::shared_ptr<Token>> s);
-    std::shared_ptr<Parser> require(std::shared_ptr<Parser> spp, sink<std::shared_ptr<Token>> s);
+    std::shared_ptr<Parser> match(token_t tok_type, Sink<std::shared_ptr<Token>> s);
+    std::shared_ptr<Parser> require(std::shared_ptr<Parser> spp, Sink<std::shared_ptr<Token>> s);
     std::shared_ptr<p_any> any();
     std::shared_ptr<p_seq> seq();
     std::shared_ptr<Parser> operator~(std::shared_ptr<Parser> spp);

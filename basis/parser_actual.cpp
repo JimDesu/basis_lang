@@ -14,9 +14,9 @@ using namespace basis;
 
 class ep_CompilationUnit : public Parser {
     std::shared_ptr<CompilationUnit> spCompilationUnit;
-    sink<std::shared_ptr<CompilationUnit>> elementSink;
+    Sink<std::shared_ptr<CompilationUnit>> sink;
 public:
-    ep_CompilationUnit(sink<std::shared_ptr<CompilationUnit>> s) :elementSink(s) {
+    ep_CompilationUnit(Sink<std::shared_ptr<CompilationUnit>> s) :sink(s) {
 
     };
 
@@ -30,7 +30,7 @@ public:
                 // all of which append to spCompilationUnit
 
         if (false) {
-            elementSink(spCompilationUnit);
+            sink(spCompilationUnit);
         }
         return false;
     }
