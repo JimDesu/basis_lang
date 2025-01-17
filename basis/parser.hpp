@@ -138,7 +138,8 @@ namespace basis {
     std::shared_ptr<Parser> match(token_t tok_type, Sink<std::shared_ptr<Token>> s);
     std::shared_ptr<Parser> require(std::shared_ptr<Parser> spp, Sink<std::shared_ptr<Token>> s);
     std::shared_ptr<p_any> any();
-    std::shared_ptr<p_seq> seq();
+    std::shared_ptr<p_seq> sequence();
+    // TODO opt, multiple, orMore
     std::shared_ptr<Parser> operator~(std::shared_ptr<Parser> spp);
     std::shared_ptr<Parser> operator++(std::shared_ptr<Parser> spp, int);
     std::shared_ptr<Parser> operator+(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs);

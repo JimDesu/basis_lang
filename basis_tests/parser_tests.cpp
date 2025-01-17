@@ -105,7 +105,7 @@ namespace parsertests
 			tokens.push_back( std::make_shared<Token>( token_t::LANGLE, 1, 4, "" ) );
 			tokens.push_back( std::make_shared<Token>( token_t::INTEGER, 1, 5, "" ) );
 
-			auto ps1 = seq();
+			auto ps1 = sequence();
 			(*ps1) << match(token_t::HEX)
 				   << match(token_t::AMPHORA)
 				   << match(token_t::AMPERSAND)
@@ -113,7 +113,7 @@ namespace parsertests
 			iter_t start{ tokens.cbegin() };
 			Assert::IsFalse((*ps1)(start, tokens.cend()));
 			Assert::IsTrue(start == tokens.cbegin());
-			auto ps2 = seq();
+			auto ps2 = sequence();
 			(*ps2) << match(token_t::HEX)
 				   << match(token_t::AMPERSAND)
 				   << match(token_t::AMPHORA)

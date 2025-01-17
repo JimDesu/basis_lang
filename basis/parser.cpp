@@ -128,7 +128,7 @@ std::shared_ptr<p_any> basis::any()
     return std::make_shared<p_any>();
 }
 
-std::shared_ptr<p_seq> basis::seq()
+std::shared_ptr<p_seq> basis::sequence()
 {
     return std::make_shared<p_seq>();
 }
@@ -152,7 +152,7 @@ std::shared_ptr<Parser> basis::operator+(std::shared_ptr<Parser> lhs, std::share
 
 std::shared_ptr<Parser> basis::operator*(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs)
 {
-    std::shared_ptr<p_seq> ps = seq();
+    std::shared_ptr<p_seq> ps = sequence();
     (*ps) << lhs << rhs;
     return ps;
 }
