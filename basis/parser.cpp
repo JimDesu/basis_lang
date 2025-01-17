@@ -134,11 +134,11 @@ std::shared_ptr<p_seq> basis::sequence()
 }
 
 std::shared_ptr<p_opt> basis::optional(std::shared_ptr<Parser> pp) {
-    return std::shared_ptr<p_opt>();
+    return std::make_shared<p_opt>(pp);
 }
 
 std::shared_ptr<p_multi> basis::multiple(std::shared_ptr<Parser> pp) {
-    return std::shared_ptr<p_multi>();
+    return std::make_shared<p_multi>(pp);
 }
 
 std::shared_ptr<Parser> basis::operator~(std::shared_ptr<Parser> spp)
