@@ -12,25 +12,36 @@
  
 using namespace basis;
 
+class ep_Import : public Parser {
+
+public:
+    ep_Import(Sink<std::shared_ptr<Declaration>> spDeclSink) {};
+    bool operator()(iter_t& start, iter_t finish) override {
+        return false;
+    };
+};
 class ep_CompilationUnit : public Parser {
     std::shared_ptr<CompilationUnit> spCompilationUnit;
     Sink<std::shared_ptr<CompilationUnit>> sink;
+    std::shared_ptr<p_multi> spParser;
 public:
     ep_CompilationUnit(Sink<std::shared_ptr<CompilationUnit>> s) :sink(s) {
-
+        // add any received declarations to the current compilation unit
+        auto a = [&](std::shared_ptr<Declaration> spDecl) {
+                if (spCompilationUnit.get()) {
+                    spCompilationUnit->declarations.push_back(spDecl);
+                }
+            };
+        spParser = std::make_shared<p_multi>( 
+          any() << std::make_shared<ep_Import>(a)
+        );
     };
 
-    // Inherited via ElementParser
     bool operator()(iter_t& start, iter_t finish) override {
         spCompilationUnit = std::make_shared<CompilationUnit>();
-
-        // set up a multi of ...
-            // set up an any of ...
-                // a bunch of Declaration types
-                // all of which append to spCompilationUnit
-
-        if (false) {
+        if ((*spParser)(start,finish)) {
             sink(spCompilationUnit);
+            return true;
         }
         return false;
     }

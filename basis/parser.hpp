@@ -144,7 +144,10 @@ namespace basis {
     std::shared_ptr<Parser> operator+(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs);
     std::shared_ptr<Parser> operator*(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs);
 
+    // TODO retire
     p_any& operator<<(p_any& pa, std::shared_ptr<Parser> spp);
+    std::shared_ptr<p_any> operator<<(std::shared_ptr<p_any> pa, std::shared_ptr<Parser> spp);
+    // TODO retire
     p_seq& operator<<(p_seq& pa, std::shared_ptr<Parser> spp);
 }
 

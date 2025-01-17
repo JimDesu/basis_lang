@@ -163,6 +163,11 @@ p_any& basis::operator<<(p_any& pa, std::shared_ptr<Parser> spp)
     return pa;
 }
 
+std::shared_ptr<p_any> basis::operator<<(std::shared_ptr<p_any> pa, std::shared_ptr<Parser> spp) {
+    pa->add(spp);
+    return pa;
+}
+
 p_seq& basis::operator<<(p_seq& pa, std::shared_ptr<Parser> spp)
 {
     pa.add(spp);
