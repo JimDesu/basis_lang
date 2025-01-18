@@ -128,41 +128,17 @@ std::shared_ptr<p_any> basis::any()
     return std::make_shared<p_any>();
 }
 
-std::shared_ptr<p_seq> basis::sequence()
+std::shared_ptr<p_seq> basis::all()
 {
     return std::make_shared<p_seq>();
 }
 
-std::shared_ptr<p_opt> basis::optional(std::shared_ptr<Parser> pp) {
+std::shared_ptr<p_opt> basis::maybe(std::shared_ptr<Parser> pp) {
     return std::make_shared<p_opt>(pp);
 }
 
-std::shared_ptr<p_multi> basis::multiple(std::shared_ptr<Parser> pp) {
+std::shared_ptr<p_multi> basis::some(std::shared_ptr<Parser> pp) {
     return std::make_shared<p_multi>(pp);
-}
-
-std::shared_ptr<Parser> basis::operator~(std::shared_ptr<Parser> spp)
-{
-    return std::make_shared<p_opt>(spp);
-}
-
-std::shared_ptr<Parser> basis::operator++(std::shared_ptr<Parser> spp, int)
-{
-    return std::make_shared<p_multi>(spp);
-}
-
-std::shared_ptr<Parser> basis::operator+(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs)
-{
-    std::shared_ptr<p_any> pa = any();
-    (*pa) << lhs << rhs;
-    return pa;
-}
-
-std::shared_ptr<Parser> basis::operator*(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs)
-{
-    std::shared_ptr<p_seq> ps = sequence();
-    (*ps) << lhs << rhs;
-    return ps;
 }
 
 p_any& basis::operator<<(p_any& pa, std::shared_ptr<Parser> spp)
@@ -179,5 +155,10 @@ std::shared_ptr<p_any> basis::operator<<(std::shared_ptr<p_any> pa, std::shared_
 p_seq& basis::operator<<(p_seq& pa, std::shared_ptr<Parser> spp)
 {
     pa.add(spp);
+    return pa;
+}
+
+std::shared_ptr<p_seq> basis::operator<<(std::shared_ptr<p_seq> pa, std::shared_ptr<Parser> spp) {
+    pa->add(spp);
     return pa;
 }

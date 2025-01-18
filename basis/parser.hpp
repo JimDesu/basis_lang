@@ -138,19 +138,17 @@ namespace basis {
     std::shared_ptr<Parser> match(token_t tok_type, Sink<std::shared_ptr<Token>> s);
     std::shared_ptr<Parser> require(std::shared_ptr<Parser> spp, Sink<std::shared_ptr<Token>> s);
     std::shared_ptr<p_any> any();
-    std::shared_ptr<p_seq> sequence();
-    std::shared_ptr<p_opt> optional(std::shared_ptr<Parser> pp);
-    std::shared_ptr<p_multi> multiple(std::shared_ptr<Parser> pp);
-    std::shared_ptr<Parser> operator~(std::shared_ptr<Parser> spp);
-    std::shared_ptr<Parser> operator++(std::shared_ptr<Parser> spp, int);
-    std::shared_ptr<Parser> operator+(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs);
-    std::shared_ptr<Parser> operator*(std::shared_ptr<Parser> lhs, std::shared_ptr<Parser> rhs);
-
+    std::shared_ptr<p_seq> all();
+    std::shared_ptr<p_opt> maybe(std::shared_ptr<Parser> pp);
+    std::shared_ptr<p_multi> some(std::shared_ptr<Parser> pp);
+    
     // TODO retire
     p_any& operator<<(p_any& pa, std::shared_ptr<Parser> spp);
     std::shared_ptr<p_any> operator<<(std::shared_ptr<p_any> pa, std::shared_ptr<Parser> spp);
     // TODO retire
     p_seq& operator<<(p_seq& pa, std::shared_ptr<Parser> spp);
+    std::shared_ptr<p_seq> operator<<(std::shared_ptr<p_seq> pa, std::shared_ptr<Parser> spp);
+
 }
 
 #endif
