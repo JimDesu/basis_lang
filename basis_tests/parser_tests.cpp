@@ -70,16 +70,16 @@ namespace parsertests
 			tokens.push_back( std::make_shared<Token>( token_t::HEX, 1, 1, "" ) );
 
 			auto p1 = any();
-			(*p1) << match(token_t::AMPERSAND) 
-		          << match(token_t::AMPHORA);
+			p1 << match(token_t::AMPERSAND) 
+		       << match(token_t::AMPHORA);
 			iter_t start{ tokens.cbegin() };
 			Assert::IsFalse((*p1)(start, tokens.cend()));
 			Assert::IsTrue(start == tokens.cbegin());
 			auto p2 = any();
-			(*p2) << match(token_t::AMPERSAND)
-				  << match(token_t::AMPHORA)
-				  << match(token_t::LANGLE)
-				  << match(token_t::HEX);
+			p2 << match(token_t::AMPERSAND)
+		       << match(token_t::AMPHORA)
+			   << match(token_t::LANGLE)
+			   << match(token_t::HEX);
 			Assert::IsTrue((*p2)(start, tokens.cend()));
 			Assert::IsTrue(start == tokens.cend());
 		}
@@ -88,10 +88,11 @@ namespace parsertests
 			std::deque<std::shared_ptr<Token>> tokens;
 			tokens.push_back( std::make_shared<Token>( token_t::HEX, 1, 1, "" ) );
 
-			auto pp = match(token_t::AMPERSAND)
-				    + match(token_t::AMPHORA)
-				    + match(token_t::LANGLE)
-				    + match(token_t::HEX);
+			auto pp = any()
+				<< match(token_t::AMPERSAND)
+				<< match(token_t::AMPHORA)
+				<< match(token_t::LANGLE)
+				<< match(token_t::HEX);
 			iter_t start{ tokens.cbegin() };
 			Assert::IsTrue((*pp)(start, tokens.cend()));
 			Assert::IsTrue(start == tokens.cend());
@@ -105,19 +106,19 @@ namespace parsertests
 			tokens.push_back( std::make_shared<Token>( token_t::LANGLE, 1, 4, "" ) );
 			tokens.push_back( std::make_shared<Token>( token_t::INTEGER, 1, 5, "" ) );
 
-			auto ps1 = each();
-			(*ps1) << match(token_t::HEX)
-				   << match(token_t::AMPHORA)
-				   << match(token_t::AMPERSAND)
-				   << match(token_t::LANGLE);
+			auto ps1 = all()
+			    << match(token_t::HEX)
+				<< match(token_t::AMPHORA)
+				<< match(token_t::AMPERSAND)
+				<< match(token_t::LANGLE);
 			iter_t start{ tokens.cbegin() };
 			Assert::IsFalse((*ps1)(start, tokens.cend()));
 			Assert::IsTrue(start == tokens.cbegin());
-			auto ps2 = each();
-			(*ps2) << match(token_t::HEX)
-				   << match(token_t::AMPERSAND)
-				   << match(token_t::AMPHORA)
-				   << match(token_t::LANGLE);
+			auto ps2 = all()
+			    << match(token_t::HEX)
+				<< match(token_t::AMPERSAND)
+				<< match(token_t::AMPHORA)
+				<< match(token_t::LANGLE);
 			Assert::IsTrue((*ps2)(start, tokens.cend()));
 			Assert::IsTrue((*start)->type == token_t::INTEGER && (*start)->pos == 5);
 		}
@@ -134,9 +135,10 @@ namespace parsertests
 				tok.text = pt->text;
 			};
 
-			auto ps1 = match(token_t::LBRACKET)
-				     * match(token_t::WRITEVAR,s)
-				     * match(token_t::RBRACKET);
+			auto ps1 = all()
+				<< match(token_t::LBRACKET)
+				<< match(token_t::WRITEVAR,s)
+				<< match(token_t::RBRACKET);
 			iter_t start{ tokens.cbegin() };
 			Assert::IsTrue((*ps1)(start, tokens.cend()));
 			Assert::AreEqual("fish", tok.text.c_str());
@@ -148,12 +150,12 @@ namespace parsertests
 			tokens.push_back( std::make_shared<Token>( token_t::INTEGER, 1, 2, "" ) );
 
 			// succeeds, but consumes no matching input
-			auto p1 = ~match(token_t::AMPHORA);
+			auto p1 = maybe(match(token_t::AMPHORA));
 			iter_t start1{ tokens.cbegin() };
 			Assert::IsTrue((*p1)(start1, tokens.cend()));
 			Assert::IsTrue(start1 == tokens.cbegin());
 			// succeeds and consumes matching input
-			auto p2 = ~match(token_t::HEX);
+			auto p2 = maybe(match(token_t::HEX));
 			iter_t start2{ tokens.cbegin() };
 			Assert::IsTrue((*p2)(start2, tokens.cend()));
 			Assert::IsTrue((*start2)->type == token_t::INTEGER && (*start2)->pos == 2);
@@ -164,12 +166,12 @@ namespace parsertests
 			tokens.push_back( std::make_shared<Token>( token_t::INTEGER, 1, 2, "" ) );
 
 			// succeeds, but consumes no matching input
-			auto p1 = ~match(token_t::AMPHORA);
+			auto p1 = maybe(match(token_t::AMPHORA));
 			iter_t start1{ tokens.cbegin() };
 			Assert::IsTrue((*p1)(start1, tokens.cend()));
 			Assert::IsTrue(start1 == tokens.cbegin());
 			// succeeds and consumes matching input
-			auto p2 = ~match(token_t::HEX);
+			auto p2 = maybe(match(token_t::HEX));
 			iter_t start2{ tokens.cbegin() };
 			Assert::IsTrue((*p2)(start2, tokens.cend()));
 			Assert::IsTrue((*start2)->type == token_t::INTEGER && (*start2)->pos == 2);
@@ -186,7 +188,7 @@ namespace parsertests
 			auto s = [&](PToken pt) { ++matchCount; };
 
 			std::shared_ptr<Parser> p2t = std::make_shared<p2_token>(token_t::HEX, s);
-			auto pm = match(token_t::HEX, s)++;
+			auto pm = some(match(token_t::HEX, s));
 			iter_t start{ tokens.cbegin() };
 			Assert::IsTrue((*pm)(start, tokens.cend()));
 			Assert::AreEqual(4, matchCount);
@@ -205,7 +207,7 @@ namespace parsertests
 			iter_t start{ tokens.cbegin() };
 			iter_t stop = end_of_range(tokens.cbegin(), tokens.cend());
             Assert::IsTrue("13" == (*stop)->text);
-			Assert::IsTrue( (*(match(token_t::INTEGER, s)++))(start, stop) );
+			Assert::IsTrue( (*some(match(token_t::INTEGER, s)))(start, stop) );
 			Assert::AreEqual(12, matchCount);
 		}
 		TEST_METHOD(parsertests_require) {

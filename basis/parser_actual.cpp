@@ -28,7 +28,7 @@ public:
     ep_CompilationUnit(Sink<std::shared_ptr<CompilationUnit>> s) :sink(s) {
         // add any received declarations to the current compilation unit
         auto a = [&](std::shared_ptr<Declaration> spDecl) {
-                if (spCompilationUnit.get()) {
+                if (spCompilationUnit) {
                     spCompilationUnit->declarations.push_back(spDecl);
                 }
             };

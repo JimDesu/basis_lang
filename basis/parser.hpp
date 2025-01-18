@@ -142,11 +142,7 @@ namespace basis {
     std::shared_ptr<p_opt> maybe(std::shared_ptr<Parser> pp);
     std::shared_ptr<p_multi> some(std::shared_ptr<Parser> pp);
     
-    // TODO retire
-    p_any& operator<<(p_any& pa, std::shared_ptr<Parser> spp);
     std::shared_ptr<p_any> operator<<(std::shared_ptr<p_any> pa, std::shared_ptr<Parser> spp);
-    // TODO retire
-    p_seq& operator<<(p_seq& pa, std::shared_ptr<Parser> spp);
     std::shared_ptr<p_seq> operator<<(std::shared_ptr<p_seq> pa, std::shared_ptr<Parser> spp);
 
 }
