@@ -1,9 +1,29 @@
-blah...:
-	cmd: x, y, z 
-|- failmode m |
-    cmd2: a, b 
-|- failmode2 n |
-	cmd3: c, z 
+
+Program Element
+
+Compilation Unit
+    Declaration* 
+
+Declaration
+    Import | 
+    Module |
+    Export |
+    Class |
+    Record |
+    Command |
+    Intrinsic |
+    Enumeration |
+    TypeAlias |
+    Subtype |
+    Instance |
+    Union |
+    Variant |
+    Object
+
+Import
+    .import <moduleName> (: Identifier)?
+
+Module
+    .module Identifier
 
 
-.cmd procedure(typeVars): (arglist) = (calls) ;;

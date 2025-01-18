@@ -48,5 +48,8 @@
     <ClInclude Include="Elements.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="parser_actual.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

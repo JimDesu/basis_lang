@@ -142,6 +142,7 @@
     <ClInclude Include="Elements.hpp" />
     <ClInclude Include="messages.hpp" />
     <ClInclude Include="parser.hpp" />
+    <ClInclude Include="parser_actual.hpp" />
     <ClInclude Include="Tokenizer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

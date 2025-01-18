@@ -65,6 +65,9 @@ namespace basis {
     template <typename T>
     using Sink = std::function<void(T)>;
 
+    template<typename S, typename T>
+    using TargetSink = std::function<void(S, T)>;
+
     // parse functions ----------------------------------------
     iter_t end_of_range( iter_t start, iter_t finish);
     bool parse_file(std::ifstream* file, char const * const fileName);
