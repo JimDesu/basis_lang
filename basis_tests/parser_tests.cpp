@@ -48,22 +48,6 @@ namespace parsertests
 			Assert::IsTrue((*match(token_t::AMPHORA))(start, tokens.cend()));
 			Assert::IsTrue(start == tokens.cend());
 		}
-		TEST_METHOD(parsertests_token_p2)
-		{
-			std::deque<std::shared_ptr<Token>> tokens;
-			tokens.push_back( std::make_shared<Token>( token_t::AMPHORA, 1, 1, "" ) );
-			Token tok{ token_t::BANG };
-			auto s = [&tok](PToken pt) { tok.type = pt->type; };
-			auto tp1 = match(token_t::HEX, s );
-			iter_t start = tokens.cbegin();
-			Assert::IsFalse((*tp1)(start, tokens.cend()));
-			Assert::IsFalse(tok.type == token_t::AMPHORA);
-			Assert::IsTrue(start == tokens.cbegin());
-			auto tp2 = match( token_t::AMPHORA, s );
-			Assert::IsTrue((*tp2)(start, tokens.cend()));
-			Assert::IsTrue(tok.type == token_t::AMPHORA);
-			Assert::IsTrue(start == tokens.cend());
-		}
 		TEST_METHOD(parsertests_any)
 		{
 			std::deque<std::shared_ptr<Token>> tokens;
@@ -122,28 +106,6 @@ namespace parsertests
 			Assert::IsTrue((*ps2)(start, tokens.cend()));
 			Assert::IsTrue((*start)->type == token_t::INTEGER && (*start)->pos == 5);
 		}
-		TEST_METHOD(parsertests_seq2)
-		{
-			std::deque<std::shared_ptr<Token>> tokens;
-			tokens.push_back( std::make_shared<Token>( token_t::LBRACKET, 1, 1, "" ) );
-			tokens.push_back( std::make_shared<Token>( token_t::WRITEVAR, 1, 2, "fish" ) );
-			tokens.push_back( std::make_shared<Token>( token_t::RBRACKET, 1, 1, "" ) );
-
-			Token tok{ token_t::BANG };
-			auto s = [&tok](PToken pt) {
-				tok.type = pt->type;
-				tok.text = pt->text;
-			};
-
-			auto ps1 = all()
-				<< match(token_t::LBRACKET)
-				<< match(token_t::WRITEVAR,s)
-				<< match(token_t::RBRACKET);
-			iter_t start{ tokens.cbegin() };
-			Assert::IsTrue((*ps1)(start, tokens.cend()));
-			Assert::AreEqual("fish", tok.text.c_str());
-			Assert::IsTrue(tok.type == token_t::WRITEVAR);
-		}
 		TEST_METHOD(parsertests_opt) {
 			std::deque<std::shared_ptr<Token>> tokens;
 			tokens.push_back( std::make_shared<Token>( token_t::HEX, 1, 1, "" ) );
@@ -175,53 +137,6 @@ namespace parsertests
 			iter_t start2{ tokens.cbegin() };
 			Assert::IsTrue((*p2)(start2, tokens.cend()));
 			Assert::IsTrue((*start2)->type == token_t::INTEGER && (*start2)->pos == 2);
-		}
-		TEST_METHOD(parsertests_multi) {
-			std::deque<std::shared_ptr<Token>> tokens;
-			tokens.push_back( std::make_shared<Token>( token_t::HEX, 1, 1, "" ) );
-			tokens.push_back( std::make_shared<Token>( token_t::HEX, 1, 2, "" ) );
-			tokens.push_back( std::make_shared<Token>( token_t::HEX, 1, 3, "" ) );
-			tokens.push_back( std::make_shared<Token>( token_t::HEX, 1, 4, "" ) );
-			tokens.push_back( std::make_shared<Token>( token_t::INTEGER, 1, 5, "" ) );
-
-			int matchCount{ 0 };
-			auto s = [&](PToken pt) { ++matchCount; };
-
-			std::shared_ptr<Parser> p2t = std::make_shared<p2_token>(token_t::HEX, s);
-			auto pm = some(match(token_t::HEX, s));
-			iter_t start{ tokens.cbegin() };
-			Assert::IsTrue((*pm)(start, tokens.cend()));
-			Assert::AreEqual(4, matchCount);
-			Assert::IsTrue((*start)->type == token_t::INTEGER && (*start)->pos == 5);
-		}
-		TEST_METHOD(parsertests_multi2) {
-			std::string lines[]{ "1 2 3 4", " 5 6 7 8", " 9 10 11 12", "13 14 15 16" };
-			std::deque<std::shared_ptr<Token>> tokens;
-			Tokenizer tokenizer(&tokens);
-
-			for(int i = 0; i < 4; i++) tokenizer.withNextLine(lines[i]).tokenize();
-			Assert::IsTrue(tokenizer.isOK());
-			Assert::AreEqual((size_t)16, tokens.size());
-			int matchCount{ 0 };
-			auto s = [&](PToken pt) { ++matchCount; };
-			iter_t start{ tokens.cbegin() };
-			iter_t stop = end_of_range(tokens.cbegin(), tokens.cend());
-            Assert::IsTrue("13" == (*stop)->text);
-			Assert::IsTrue( (*some(match(token_t::INTEGER, s)))(start, stop) );
-			Assert::AreEqual(12, matchCount);
-		}
-		TEST_METHOD(parsertests_require) {
-			std::deque<std::shared_ptr<Token>> tokens;
-			tokens.push_back( std::make_shared<Token>( token_t::INTEGER, 1, 5, "" ) );
-
-			bool didFail{ false };
-			auto f = [&](PToken pt) { didFail = true; };
-
-			auto preq = require(match(token_t::HEX),f);
-			iter_t start{ tokens.cbegin() };
-			Assert::IsFalse(didFail);
-			Assert::IsFalse((*preq)(start, tokens.cend()));
-			Assert::IsTrue(didFail);
 		}
 	};
 }

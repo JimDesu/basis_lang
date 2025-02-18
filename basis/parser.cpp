@@ -60,21 +60,6 @@ bool basis::p_token::operator()(iter_t& start, iter_t finish) {
     return true;
 }
 
-bool basis::p2_token::operator()(iter_t& start, iter_t finish)
-{
-    if (start == finish || (*start)->type != token_type) return false;
-    token_sink(*start);
-    ++start;
-    return true;
-}
-
-bool basis::p_error::operator()(iter_t& start, iter_t finish)
-{
-    if ((*p_parser)(start, finish)) return true;
-    err_sink(*start);
-    return false;
-}
-
 bool basis::p_any::operator()(iter_t& start, iter_t finish) {
     for (int i = 0; i < parsers.size(); i++) {
         if ((*parsers[i])(start, finish)) return true;
@@ -111,16 +96,6 @@ bool basis::p_multi::operator()(iter_t& start, iter_t finish)
 std::shared_ptr<Parser> basis::match(token_t tok_type)
 {
     return std::make_shared<p_token>(tok_type);
-}
-
-std::shared_ptr<Parser> basis::match(token_t tok_type, Sink<std::shared_ptr<Token>> s)
-{
-    return std::make_shared<p2_token>(tok_type, s);
-}
-
-std::shared_ptr<Parser> basis::require(std::shared_ptr<Parser> spp, Sink<std::shared_ptr<Token>> s)
-{
-    return std::make_shared<p_error>(spp, s);
 }
 
 std::shared_ptr<p_any> basis::any()

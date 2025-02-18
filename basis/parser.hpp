@@ -62,8 +62,8 @@ namespace basis {
         virtual bool operator()(iter_t& start, iter_t finish) = 0;
     };
 
-    template <typename T>
-    using Sink = std::function<void(T)>;
+    //template <typename T>
+    //using Sink = std::function<void(T)>;
 
     template<typename S, typename T>
     using TargetSink = std::function<void(S, T)>;
@@ -84,23 +84,31 @@ namespace basis {
         virtual bool operator()(iter_t& start, iter_t finish);
     };
 
-    class p2_token : public Parser {
-        token_t token_type;
-        Sink <std::shared_ptr<Token>> token_sink;
+    //class p2_token : public Parser {
+        //token_t token_type;
+        //Sink <std::shared_ptr<Token>> token_sink;
+    //public:
+        //p2_token(token_t tok_type, Sink<std::shared_ptr<Token>> s):
+            //token_type{ tok_type }, token_sink{ s } {};
+        //virtual bool operator()(iter_t& start, iter_t finish);
+    //};
+
+    //class p_error : public Parser {
+        //Sink<std::shared_ptr<Token>> err_sink;
+        //std::shared_ptr<Parser> p_parser;
+    //public:
+        //p_error(std::shared_ptr<Parser> spp, Sink <std::shared_ptr<Token>> s)
+            //: p_parser{ spp }, err_sink{ s } {};
+        //virtual bool operator()(iter_t& start, iter_t finish);
+    //};
+    // TODO rework this for the new version
+    class p_error : public Parser {
+        std::shared_ptr<Parser> p_parser;
     public:
-        p2_token(token_t tok_type, Sink<std::shared_ptr<Token>> s):
-            token_type{ tok_type }, token_sink{ s } {};
+        p_error(std::shared_ptr<Parser> spp) : p_parser{ spp } {};
         virtual bool operator()(iter_t& start, iter_t finish);
     };
 
-    class p_error : public Parser {
-        Sink<std::shared_ptr<Token>> err_sink;
-        std::shared_ptr<Parser> p_parser;
-    public:
-        p_error(std::shared_ptr<Parser> spp, Sink <std::shared_ptr<Token>> s)
-            : p_parser{ spp }, err_sink{ s } {};
-        virtual bool operator()(iter_t& start, iter_t finish);
-    };
     class p_any : public Parser {
         std::vector<std::shared_ptr<Parser>> parsers;
     public:
@@ -138,8 +146,9 @@ namespace basis {
     };
 
     std::shared_ptr<Parser> match(token_t tok_type);
-    std::shared_ptr<Parser> match(token_t tok_type, Sink<std::shared_ptr<Token>> s);
-    std::shared_ptr<Parser> require(std::shared_ptr<Parser> spp, Sink<std::shared_ptr<Token>> s);
+    //std::shared_ptr<Parser> match(token_t tok_type, Sink<std::shared_ptr<Token>> s);
+    // TODO rework this idea
+    //std::shared_ptr<Parser> require(std::shared_ptr<Parser> spp, Sink<std::shared_ptr<Token>> s);
     std::shared_ptr<p_any> any();
     std::shared_ptr<p_seq> all();
     std::shared_ptr<p_opt> maybe(std::shared_ptr<Parser> pp);
